@@ -30,8 +30,8 @@ def assignment():
         if columnName in list2: ## all the names:
 
             for i in range(len(df[columnName])):
-                if df[columnName].iloc[i] :
-                    list.append(df[columnName].iloc[i])
+                if df[columnName].iloc[i]==1 :
+                    list.append(columnName)
 
 
 
