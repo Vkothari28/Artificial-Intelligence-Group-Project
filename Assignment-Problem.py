@@ -1,19 +1,19 @@
 import pandas as pd
 
 
-df= pd.read_csv('addCSVNAME')
-def assignment():
+df2= pd.read_csv('SkillList.csv')
+def assignment(problemID):
     list=[]
 
 
-    list2=[ 'If /Else',
+    list2=[ 'If/Else',
     'NestedIf',
     'While',
     'For',
     'NestedFor',
     'Math+-*/',
     'Math%',
-    'LogicAndNotOr'
+    'LogicAndNotOr',
     'LogicCompareNum',
     'LogicBoolean',
     'StringFormat',
@@ -24,14 +24,24 @@ def assignment():
     'CharEqual',
     'ArrayIndex',
     'DefFunction']
-    for (columnName,columnData) in df.iteritems():
+    broken=False
+    index=0
+
+    for i in range(len(df2['ProblemID'])):
+        print(df2['ProblemID'].iloc[i])
+        if(df2['ProblemID'].iloc[i]==problemID):
+            for j in range (len(list2)):
+                word=list2[j]
+
+                if(df2[word].iloc[i]==1):
+                    if(df2[word].iloc[i] not in list):
+                        ##list[index]=word
+                        list.insert(index,word)
+                        index+=1
 
 
-        if columnName in list2: ## all the names:
 
-            for i in range(len(df[columnName])):
-                if df[columnName].iloc[i]==1 :
-                    list.append(columnName)
+
 
 
 
@@ -41,4 +51,4 @@ def assignment():
 
 
 if __name__=='__main__':
-    assignment()
+    assignment(12)
