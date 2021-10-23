@@ -24,9 +24,9 @@ def assignment(problemID):
     'CharEqual',
     'ArrayIndex',
     'DefFunction']
-    broken=False
-    index=0
 
+
+    index=0
     for i in range(len(df2['ProblemID'])):
         print(df2['ProblemID'].iloc[i])
         if(df2['ProblemID'].iloc[i]==problemID):
@@ -35,7 +35,7 @@ def assignment(problemID):
 
                 if(df2[word].iloc[i]==1):
                     if(df2[word].iloc[i] not in list):
-                        ##list[index]=word
+
                         list.insert(index,word)
                         index+=1
 
