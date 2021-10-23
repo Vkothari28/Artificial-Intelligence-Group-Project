@@ -12,10 +12,10 @@ from pyBKT.models import Model
 
 model = Model(seed=42, num_fits=1)
 
-df = pd.read_csv('Train/early.csv')
+df = pd.read_csv('early.csv')
 
 df.insert(0, 'row', range(len(df)))
-df2 = pd.read_csv('Train/SkillList.csv')
+df2 = pd.read_csv('SkillList.csv')
 
 list1 = []
 
@@ -49,13 +49,13 @@ for i in range(len(df2['ProblemID'])):
         for j in range(len(list2)):
             word = list2[j]
             if df2[word].iloc[i] == 1:
-                if df2[word].iloc[i] not in list:
-                    list.append(word)
-    problemToSkill[df2['ProblemID'].iloc[i]] = list
+                if df2[word].iloc[i] not in list1:
+                    list1.append(word)
+    problemToSkill[df2['ProblemID'].iloc[i]] = list1
     list1 = []
 
 # print(problemToSkill[1])
-for problemID in df.iloc[:, 3]:
+for problemID in df.iloc[:, 3]: # ww
     # print(problemID)
     # if problemID in list3:
     if problemID in problemToSkill.keys():
@@ -71,6 +71,12 @@ df['SkillName'] = list1
 defaults = {'order_id': 'row', 'user_id': 'SubjectID', 'problem_id': 'ProblemID', 'correct': 'CorrectEventually',
             'skill_name': 'SkillName'}
 
+
+# print(df.head())
 model.fit(data=df, defaults=defaults)
-training_acc = model.evaluate(data=df, metric='accuracy')
-print(model.params())
+dd = model.params()
+
+dd.to_csv(path_or_buf="modelparams.csv")
+
+# training_acc = model.evaluate(data=df, metric='accuracy')
+# print(model.params())
