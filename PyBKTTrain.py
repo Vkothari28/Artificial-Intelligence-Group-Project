@@ -17,6 +17,8 @@ df = pd.read_csv('early.csv')
 df.insert(0, 'row', range(len(df)))
 df2 = pd.read_csv('SkillList.csv')
 
+df2 = df2.rename({'Math+-*/': 'Math1', 'Math%': 'Math2'}, axis=1)  # Renaming the columns to remove the error
+
 list1 = []
 
 list2 = ['If/Else',
@@ -24,8 +26,8 @@ list2 = ['If/Else',
          'While',
          'For',
          'NestedFor',
-         'Math+-*/',
-         'Math%',
+         'Math1',
+         'Math2',
          'LogicAndNotOr',
          'LogicCompareNum',
          'LogicBoolean',
@@ -44,13 +46,11 @@ list3 = df.loc[:, 'ProblemID']
 problemToSkill = {}
 
 for i in range(len(df2['ProblemID'])):
-    # print(df2['ProblemID'].iloc[i])
-    if df2['ProblemID'].iloc[i] == df2['ProblemID'].iloc[i]:
-        for j in range(len(list2)):
-            word = list2[j]
-            if df2[word].iloc[i] == 1:
-                if df2[word].iloc[i] not in list1:
-                    list1.append(word)
+    for j in range(len(list2)):
+        word = list2[j]
+        if df2[word].iloc[i] == 1:
+            if df2[word].iloc[i] not in list1:
+                list1.append(word)
     problemToSkill[df2['ProblemID'].iloc[i]] = list1
     list1 = []
 
@@ -62,10 +62,12 @@ for problemID in df.iloc[:, 3]: # ww
         list1.append(problemToSkill[problemID])
     # break
 
-# print(list)
+# print(len(list1))
 
 df['SkillName'] = list1
 
+# print(df['SkillName'])
+# print(list1)
 # df.to_csv(path_or_buf='NewEarly.csv')
 
 defaults = {'order_id': 'row', 'user_id': 'SubjectID', 'problem_id': 'ProblemID', 'correct': 'CorrectEventually',
@@ -79,4 +81,9 @@ dd = model.params()
 dd.to_csv(path_or_buf="modelparams.csv")
 
 # training_acc = model.evaluate(data=df, metric='accuracy')
-# print(model.params())
+
+preds_df = model.predict(data=df)
+
+preds_df.to_csv(path_or_buf="Results.csv")
+
+# print(preds_df.head(20))
