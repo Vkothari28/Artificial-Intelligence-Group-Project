@@ -8,6 +8,8 @@ import numpy as np
 import os
 from os import path
 
+
+
 from pyBKT.models import Model
 
 model = Model(seed=42, num_fits=1)
@@ -80,3 +82,4 @@ dd.to_csv(path_or_buf="modelparams.csv")
 
 # training_acc = model.evaluate(data=df, metric='accuracy')
 # print(model.params())
+#
