@@ -105,20 +105,26 @@ def syntax_sucks():
     df_main=pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
     count=0
     probcheck=[]
+    syntaxed=[]
     print(subject_list)
     print(len(subject_list))
     for x in range (len(subject_list)):
         for i in range(len(df_main)):
-            if(df_main['SubjectID'].iloc[i]==subject_list[x] and df_main['ProblemID'].iloc[i] in problist and df_main['CompileMessageType'].iloc[i]=='SyntaxError' ):
+            if(df_main['SubjectID'].iloc[i]==subject_list[x] and df_main['ProblemID'].iloc[i] in problist  ):
 
                 if(df_main['ProblemID'].iloc[i] not in probcheck):
                     probcheck.append(df_main['ProblemID'].iloc[i])
-                    count += 1
-        print(count)
+                    #count += 1
+                if df_main['CompileMessageType'].iloc[i] == 'SyntaxError' and df_main['ProblemID'].iloc[i] not in syntaxed:
+                    syntaxed.append(df_main['ProblemID'].iloc[i])
+
+        print(len(syntaxed))
         print(len(probcheck))
-        print(count/len(probcheck))
-        probcheck.clear
-        count=0
+        print(len(syntaxed)/len(probcheck))
+        probcheck.clear()
+        syntaxed.clear()
+        count+=1
+        print('Student no:', count)
 
 
 
