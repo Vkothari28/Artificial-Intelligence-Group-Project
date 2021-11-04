@@ -4,7 +4,7 @@ import math
 df = pd.read_csv('early.csv')
 
 df.insert(4, 'pProblemSyntaxError', range(len(df)))
-# df.insert(5, 'pProblemSemanticError', range(len(df)))
+df.insert(5, 'pProblemSemanticError', range(len(df)))
 
 df2 = pd.read_csv('MainTable.csv')
 
@@ -51,14 +51,45 @@ def p_prob_syntax_error_shortened():
                 df['pProblemSyntaxError'].iloc[i] = '{0:.3g}'.format(len(syntax_list)/len(sublist))
                 df.to_csv('newEarly.csv')
 
-        print('Problem ID' + str(problem_list[x]))
-        print('No. of students who answered', len(sublist))
-        print('No of students who made syntax error', len(syntax_list))
-        print('index is ', str(index))
-        print('Percentage of syntax error by subjects', len(syntax_list)/len(sublist))
+        # print('Problem ID' + str(problem_list[x]))
+        # print('No. of students who answered', len(sublist))
+        # print('No of students who made syntax error', len(syntax_list))
+        # print('index is ', str(index))
+        # print('Percentage of syntax error by subjects', len(syntax_list)/len(sublist))
         sublist.clear()
         syntax_list.clear()
 
+
+def p_prob_semantic_error_shortened():
+    problem_list = get_problems(df)
+    semantic_list = []
+    sublist = list()
+    index = 0
+
+    for x in range(len(problem_list)):
+
+        for a in range(len(df2)):
+            if df2['ProblemID'].iloc[a] == problem_list[x]:
+                if df2['SubjectID'].iloc[a] not in sublist:
+                    sublist.append((df2['SubjectID'].iloc[a]))
+                if 1 > df2['Score'].iloc[a] > 0:
+
+                    if df2['SubjectID'].iloc[a] not in semantic_list:
+                        semantic_list.append(df2['SubjectID'].iloc[a])
+                        index += 1
+
+        for i in range(len(df)):
+            if df['ProblemID'].iloc[i] == problem_list[x]:
+                df['pProblemSemanticError'].iloc[i] = '{0:.3g}'.format(len(semantic_list)/len(sublist))
+                df.to_csv('newEarly.csv')
+
+        # print('Problem ID' + str(problem_list[x]))
+        # print('No. of students who answered', len(sublist))
+        # print('No of students who made semantic error', len(semantic_list))
+        # print('index is ', str(index))
+        # print('Percentage of syntax error by subjects', len(semantic_list)/len(sublist))
+        sublist.clear()
+        semantic_list.clear()
 # def p_prob_syntax_error():
 #     subjectID = getSubjects(df)
 #     problemList = get_problems(df)
@@ -83,6 +114,7 @@ def p_prob_syntax_error_shortened():
 
 def main():
     p_prob_syntax_error_shortened()
+    p_prob_semantic_error_shortened()
 
 
 if __name__ == "__main__":
