@@ -27,6 +27,7 @@ def getSubjects(df):
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
+
 def p_prob_syntax_error_shortened():
     problem_list = get_problems(df)
     syntax_list = []
