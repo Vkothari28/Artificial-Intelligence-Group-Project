@@ -1,12 +1,22 @@
 import pandas as pd
 import math
 
-df = pd.read_csv('early.csv')
+df_train = pd.read_csv('earlyTrain.csv')
+df_test = pd.read_csv('earlyTest.csv')
 
-df.insert(4, 'pProblemSyntaxError', range(len(df)))
-df.insert(5, 'pProblemSemanticError', range(len(df)))
+# df_test.insert(4, 'pProblemSyntaxError', range(len(df_test)))
+# df_test.insert(5, 'pProblemSemanticError', range(len(df_test)))
+# df_test.insert(6, 'pSubjectSyntaxError', range(len(df_test)))
+# df_test.insert(7, 'pSubjectSemanticError', range(len(df_test)))
 
-df2 = pd.read_csv('MainTable.csv')
+df_train.insert(4, 'pProblemSyntaxError', range(len(df_train)))
+df_train.insert(5, 'pProblemSemanticError', range(len(df_train)))
+df_train.insert(6, 'pSubjectSyntaxError', range(len(df_train)))
+df_train.insert(7, 'pSubjectSemanticError', range(len(df_train)))
+
+df2_test = pd.read_csv('TestMainTable.csv')
+df2_train = pd.read_csv('TrainMainTable.csv')
+
 
 
 def get_problems(df):
@@ -28,7 +38,7 @@ def getSubjects(df):
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
-def p_prob_syntax_error_shortened():
+def p_prob_syntax_error_shortened(df, df2):
     problem_list = get_problems(df)
     syntax_list = []
     sublist = list()
@@ -49,7 +59,7 @@ def p_prob_syntax_error_shortened():
         for i in range(len(df)):
             if df['ProblemID'].iloc[i] == problem_list[x]:
                 df['pProblemSyntaxError'].iloc[i] = '{0:.3g}'.format(len(syntax_list)/len(sublist))
-                df.to_csv('newEarly.csv')
+                df.to_csv('newEarlyTrain.csv')
 
         # print('Problem ID' + str(problem_list[x]))
         # print('No. of students who answered', len(sublist))
@@ -60,7 +70,7 @@ def p_prob_syntax_error_shortened():
         syntax_list.clear()
 
 
-def p_prob_semantic_error_shortened():
+def p_prob_semantic_error_shortened(df, df2):
     problem_list = get_problems(df)
     semantic_list = []
     sublist = list()
@@ -81,7 +91,7 @@ def p_prob_semantic_error_shortened():
         for i in range(len(df)):
             if df['ProblemID'].iloc[i] == problem_list[x]:
                 df['pProblemSemanticError'].iloc[i] = '{0:.3g}'.format(len(semantic_list)/len(sublist))
-                df.to_csv('newEarly.csv')
+                df.to_csv('newEarlyTrain.csv')
 
         # print('Problem ID' + str(problem_list[x]))
         # print('No. of students who answered', len(sublist))
@@ -112,9 +122,87 @@ def p_prob_semantic_error_shortened():
 #     return dic
 
 
+def generateSyntaxFeaturesBySubject(df, df2):
+    problemList = get_problems(df)
+    subjectList = getSubjects(df)
+    count = 0
+    probCheck = []
+    syntaxed = []
+
+    # print(subjectList)
+    # print(len(subjectList))
+    # for x in range(len(problem_list)):
+    #
+    #     for a in range(len(df2)):
+    #         if df2['ProblemID'].iloc[a] == problem_list[x]:
+    #             if df2['SubjectID'].iloc[a] not in sublist:
+    #                 sublist.append((df2['SubjectID'].iloc[a]))
+
+    for x in range(len(subjectList)):
+        for i in range(len(df2)):
+            if df2['SubjectID'].iloc[i] == subjectList[x] and df2['ProblemID'].iloc[i] in problemList:
+                count += 1
+                if df2['ProblemID'].iloc[i] not in probCheck:
+                    probCheck.append(df2['ProblemID'].iloc[i])
+                    # count += 1
+                if df2['CompileMessageType'].iloc[i] == 'SyntaxError' and df2['ProblemID'].iloc[
+                    i] not in syntaxed:
+                    syntaxed.append(df2['ProblemID'].iloc[i])
+
+
+        for idx in range(len(df)):
+            if df['SubjectID'].iloc[idx] == subjectList[x]:
+                df['pSubjectSyntaxError'].iloc[idx] = '{0:.3g}'.format(len(syntaxed)/len(probCheck))
+                df.to_csv('newEarlyTrain.csv')
+
+        probCheck.clear()
+        syntaxed.clear()
+
+
+def generateSemanticFeaturesBySubject(df, df2):
+    problemList = get_problems(df)
+    subjectList = getSubjects(df)
+
+    count = 0
+    probCheck = []
+    semantic = []
+    pSubjectSemanticErrors = []
+    # print(subjectList)
+    # print(len(subjectList))
+    for x in range(len(subjectList)):
+        for i in range(len(df2)):
+            if df2['SubjectID'].iloc[i] == subjectList[x] and df2['ProblemID'].iloc[i] in problemList:
+                count += 1
+                if df2['ProblemID'].iloc[i] not in probCheck:
+                    probCheck.append(df2['ProblemID'].iloc[i])
+
+                if 0 < df2['Score'].iloc[i] < 1 and df2['ProblemID'].iloc[i] not in semantic:
+                    semantic.append(df2['ProblemID'].iloc[i])
+
+        # print(len(semantic))
+        # print(len(probCheck))
+        # print(len(semantic) / len(probCheck))
+
+        checkCount = 0
+        for idx in range(len(df)):
+            if df['SubjectID'].iloc[idx] == subjectList[x]:
+                df['pSubjectSemanticError'].iloc[idx] = '{0:.3g}'.format(len(semantic)/len(probCheck))
+                checkCount += 1
+
+            if checkCount > count:
+                break
+
+        count = 0
+        probCheck.clear()
+        semantic.clear()
+
+    df.to_csv('newEarlyTrain.csv')
+
 def main():
-    p_prob_syntax_error_shortened()
-    p_prob_semantic_error_shortened()
+    p_prob_syntax_error_shortened(df_train, df2_train)
+    p_prob_semantic_error_shortened(df_train, df2_train)
+    generateSyntaxFeaturesBySubject(df_train, df2_train)
+    generateSemanticFeaturesBySubject(df_train, df2_train)
 
 
 if __name__ == "__main__":
