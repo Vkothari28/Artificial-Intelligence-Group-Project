@@ -1,5 +1,6 @@
 import os
 import statistics
+from _ast import mod
 
 import pandas as pd
 
@@ -22,7 +23,7 @@ def getProblems(df):
 
 def getPcorrect():
     df_to_edit= pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
-    df1= pd.read_csv('S19_Release_6_28_21.zip/Train/early.csv')
+    df1= pd.read_csv('newEarly.csv')
     list_of_probs=getProblems(df1)
     df1["pCorrectProblem"]=""
 
@@ -59,7 +60,8 @@ def getPcorrect():
         correct_count = 0
         checkcount=0
     pd.set_option('display.max_columns', 16)
-    print(df1)
+
+    df1.to_csv('newEarly.csv')
 
 
     return df1
@@ -91,14 +93,13 @@ def pMedianAttemps(df):
                 cc+=1
         count=0
 
-    print(early_df)
-    if not os.path.isfile('newEarly.csv'):
+
         early_df.to_csv('newEarly.csv')
 
 
 
 def syntax_sucks():
-    df=pd.read_csv('S19_Release_6_28_21.zip/Train/early.csv')
+    df=pd.read_csv('newEarly.csv')
     #no of problems which a subject commited syntax error
     problist=getProblems(df)
     subject_list= getSubjects(df)
@@ -131,7 +132,7 @@ def syntax_sucks():
 
 def main2():
 
-   ## getRandomly('S19_Release_6_28_21.zip/Train/early.csv')
+   ## getRandomly('newEarly.csv')
     df=getPcorrect()
 
     pMedianAttemps(df)
@@ -140,7 +141,7 @@ def main2():
 
 def main():
     # df = pd.read_csv('./Data/MainTable.csv')
-    df = pd.read_csv('early.csv')
+    df = pd.read_csv('newEarly.csv')
     subjectList = getSubjects(df)
     problemList = getProblems(df)
     # df2 = pd.DataFrame(subjectList, columns=["SubjectID"])
