@@ -23,7 +23,7 @@ def getProblems(df):
 
 def getPcorrect():
     df_to_edit= pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
-    df1= pd.read_csv('newEarlyTrain.csv')
+    df1= pd.read_csv('newEarlyTest.csv')
     list_of_probs=getProblems(df1)
     df1["pCorrectProblem"]=""
 
@@ -61,7 +61,7 @@ def getPcorrect():
         checkcount=0
     pd.set_option('display.max_columns', 16)
 
-    df1.to_csv('newEarlyTrain.csv')
+    df1.to_csv('newEarlyTest.csv')
 
 
     return df1
@@ -94,7 +94,7 @@ def pMedianAttemps(df):
         count=0
 
 
-        early_df.to_csv('newEarlyTrain.csv')
+        early_df.to_csv('newEarlyTest.csv')
         print(early_df)
 
 
