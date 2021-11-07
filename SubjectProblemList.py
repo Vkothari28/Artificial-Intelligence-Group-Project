@@ -23,7 +23,7 @@ def getProblems(df):
 
 def getPcorrect():
     df_to_edit= pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
-    df1= pd.read_csv('newEarly.csv')
+    df1= pd.read_csv('newEarlyTrain.csv')
     list_of_probs=getProblems(df1)
     df1["pCorrectProblem"]=""
 
@@ -61,7 +61,7 @@ def getPcorrect():
         checkcount=0
     pd.set_option('display.max_columns', 16)
 
-    df1.to_csv('newEarly.csv')
+    df1.to_csv('newEarlyTrain.csv')
 
 
     return df1
@@ -94,7 +94,8 @@ def pMedianAttemps(df):
         count=0
 
 
-        early_df.to_csv('newEarly.csv')
+        early_df.to_csv('newEarlyTrain.csv')
+        print(early_df)
 
 
 
@@ -136,12 +137,12 @@ def main2():
     df=getPcorrect()
 
     pMedianAttemps(df)
-    syntax_sucks()
+    #syntax_sucks()
 
 
 def main():
     # df = pd.read_csv('./Data/MainTable.csv')
-    df = pd.read_csv('newEarly.csv')
+    df = pd.read_csv('newEarlyTrain.csv')
     subjectList = getSubjects(df)
     problemList = getProblems(df)
     # df2 = pd.DataFrame(subjectList, columns=["SubjectID"])
@@ -152,5 +153,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+   # main()
     main2()
