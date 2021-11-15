@@ -88,7 +88,7 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 
 model = LogisticRegressionCV()
-# model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+# model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1) 
 model.fit(X_train, y_train)
 train_predictions = model.predict(X_train)
 
