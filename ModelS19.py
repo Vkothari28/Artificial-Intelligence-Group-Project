@@ -92,7 +92,7 @@ from sklearn.ensemble import BaggingClassifier
 
 # model = LogisticRegressionCV()
 # model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
-clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(100, 50, 2), random_state=42)
+clf = MLPClassifier(solver='lbfgs', alpha=1e-2, hidden_layer_sizes=(50, 25, 2), random_state=42)
 model = BaggingClassifier(base_estimator=clf, n_estimators=65, random_state=42)
 
 model.fit(X_train, y_train)
