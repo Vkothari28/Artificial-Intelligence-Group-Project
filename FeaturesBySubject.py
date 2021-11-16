@@ -1,24 +1,5 @@
 import pandas as pd
 
-
-# def generateSyntaxErrors(subjectList, problemList, df):
-#     pSyntaxErrors = []
-#     pSemanticErrors = []
-#     countSyntaxErrors = [0] * len(subjectList)
-#     countProblemsAttempted = [0] * len(problemList)
-#     # print((countSyntaxErrors))
-#     for subjectID in subjectList:
-#         for problemID in problemList:
-#             for column, rows in df.iterrows():
-#                 # print(column, rows['SubjectID'])
-#                 if rows['SubjectID'] == subjectID and rows['ProblemID'] == problemID:
-#                     # print(subjectList.index(rows['SubjectID']))
-#                     if rows['CompileMessageType'] == 'SyntaxError':
-#                         countSyntaxErrors[subjectList.index(rows['SubjectID'])] += 1
-#                         # print(problemID, column)
-#                         break
-
-
 def generateSyntaxFeaturesBySubject(subjectList, problemList, df):
     df2 = pd.read_csv('newEarly.csv')
     df2['pSubjectSyntaxErrors'] = ""
