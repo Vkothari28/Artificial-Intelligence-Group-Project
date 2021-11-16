@@ -18,7 +18,6 @@ df2_test = pd.read_csv('TestMainTable.csv')
 df2_train = pd.read_csv('TrainMainTable.csv')
 
 
-
 def get_problems(df):
     prob_list = []
     for i in range(len(df)):
