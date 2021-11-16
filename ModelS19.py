@@ -1,11 +1,10 @@
+import os
 import pandas as pd
 import numpy as np
 from ProgSnap2 import ProgSnap2Dataset
 from ProgSnap2 import PS2
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
-import numpy as np
-import os
 
 semester = 'S19'
 BASE_PATH = os.path.join('Data', 'Release', semester)
@@ -53,11 +52,13 @@ def extract_instance_features(instance, early_df):
     # print(len(df_generatedFeatures_problems))
     instance['PercSubjectSyntaxErrors'] = np.median(df_generatedFeatures_problems['pSubjectSyntaxError'])
     instance['PercProbSemanticErrors'] = np.median(df_generatedFeatures_problems['pSubjectSemanticError'])
+    # instance['SubjectMeanAttempts'] = np.mean(df_generatedFeatures_problems['pMedian'])
     instance = instance.drop('SubjectID')
     return instance
 
 
 print(extract_instance_features(X_train_base.iloc[1], early_train))
+# print(extract_instance_features(X_train_base.iloc[2], early_train))
 
 
 def extract_features(X, early_df, scaler, is_train):
@@ -86,9 +87,14 @@ X_train[:2, ]
 
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import BaggingClassifier
 
-model = LogisticRegressionCV()
-# model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1) 
+# model = LogisticRegressionCV()
+# model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(100, 50, 2), random_state=42)
+model = BaggingClassifier(base_estimator=clf, n_estimators=65, random_state=42)
+
 model.fit(X_train, y_train)
 train_predictions = model.predict(X_train)
 
@@ -107,8 +113,9 @@ plot_roc_curve(model, X_train, y_train)
 
 from sklearn.model_selection import cross_validate
 
-model = LogisticRegressionCV()
+# model = LogisticRegressionCV()
 # model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+model = BaggingClassifier(base_estimator=clf, n_estimators=65, random_state=42)
 cv_results = cross_validate(model, X_train, y_train, cv=10, scoring=['accuracy', 'f1_macro', 'roc_auc'])
 print(f'Accuracy: {np.mean(cv_results["test_accuracy"])}')
 print(f'AUC: {np.mean(cv_results["test_roc_auc"])}')
