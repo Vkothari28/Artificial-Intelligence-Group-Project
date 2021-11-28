@@ -1,42 +1,33 @@
-import os
-import random
-
 import pandas as pd
 import numpy as np
-import sklearn.svm
-
-from ProgSnap2 import ProgSnap2Dataset
-from ProgSnap2 import PS2
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import OneHotEncoder
 import pickle
 
 
 late_train = pd.read_csv('S19.zip/data/Train/late.csv')
 
 
+with open('Code/LateTrainAllFeatures.pickle', 'rb') as handle:
+    X_Train = pickle.load(handle)
+
+# print(len(X_train))
+TrainLateProblemList = pd.read_csv('Code/LateTrainProblemList.csv')
+
+
 def perProblemFeatures(X_train, prob_id):
+    # print('Problem ID: ', prob_id)
     n_previously_generated_features = 8
     subjectFeatures = []
     for i in range(len(X_train)):
         if X_train[i, n_previously_generated_features] == prob_id:
-            subjectFeatures.append(X_train[i, :8])
-
+            subjectFeatures.append(X_train[i, :8]) # Try with different features from 5-8 (First 5 from Naive Model)
     return subjectFeatures
 
-
-with open('LateTrainAllFeatures.pickle', 'rb') as handle:
-    X_Train = pickle.load(handle)
-
-# print(len(X_train))
-TrainLateProblemList = pd.read_csv('TrainLateProblemList.csv')
 
 problem_X_Train = []
 sum = 0
 
 for i in range(20):
-    # prX_Train.iloc[0, 8]
-    # print(TrainLateProblemList.iloc[i])
+    # print(TrainLateProblemList['ProblemID'].iloc[i])
     problem_X_Train.append(perProblemFeatures(X_Train, TrainLateProblemList['ProblemID'].iloc[i]))
     sum += len(problem_X_Train[i])
     # print(len(problem_X_Train[i]))
@@ -69,8 +60,6 @@ for l in range(20):
 
     from sklearn.linear_model import LogisticRegressionCV
     from sklearn.ensemble import RandomForestClassifier
-    from sklearn.neural_network import MLPClassifier
-    from sklearn.ensemble import BaggingClassifier
     from sklearn.svm import SVC
     from sklearn.svm import LinearSVC
 
