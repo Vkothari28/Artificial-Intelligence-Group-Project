@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Artificial-Intelligence-Group-Project.iml" filepath="$PROJECT_DIR$/.idea/Artificial-Intelligence-Group-Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/../CS534-GroupProject/.idea/CS534-GroupProject.iml" filepath="$PROJECT_DIR$/../CS534-GroupProject/.idea/CS534-GroupProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Homework-3-AI/.idea/Homework-3-AI.iml" filepath="$PROJECT_DIR$/../Homework-3-AI/.idea/Homework-3-AI.iml" />
     </modules>
   </component>
 </project>

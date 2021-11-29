@@ -10,6 +10,7 @@ def getSubjects(df):
     for i in range(len(df)):
         if df['SubjectID'].iloc[i] not in subjectList:
             subjectList.append(df['SubjectID'].iloc[i])
+    print(len(subjectList))
     return subjectList
 
 
@@ -22,7 +23,7 @@ def getProblems(df):
 
 
 def getPcorrect():
-    df_to_edit= pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
+    df_to_edit= pd.read_csv('F19/Test/Data/MainTable.csv')
     df1= pd.read_csv('newEarlyTest.csv')
     list_of_probs=getProblems(df1)
     df1["pCorrectProblem"]=""
@@ -61,7 +62,7 @@ def getPcorrect():
         checkcount=0
     pd.set_option('display.max_columns', 16)
 
-    df1.to_csv('newEarlyTest.csv')
+    df1.to_csv('newEarlyTest1.csv')
 
 
     return df1
@@ -101,7 +102,7 @@ def pMedianAttemps(df):
 
 def syntax_sucks():
     df=pd.read_csv('newEarly.csv')
-    #no of problems which a subject commited syntax error
+    #no of problems which a subject commmited syntax error
     problist=getProblems(df)
     subject_list= getSubjects(df)
     df_main=pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
@@ -142,7 +143,7 @@ def main2():
 
 def main():
     # df = pd.read_csv('./Data/MainTable.csv')
-    df = pd.read_csv('newEarlyTrain.csv')
+    df = pd.read_csv('F19/Test/early.csv')
     subjectList = getSubjects(df)
     problemList = getProblems(df)
     # df2 = pd.DataFrame(subjectList, columns=["SubjectID"])
@@ -151,7 +152,24 @@ def main():
     df3 = pd.DataFrame(problemList, columns=["ProblemID"])
     df3.to_csv('ProblemList.csv', index=False)
 
+# def fill_missing_students():
+#     df=pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
+#     df2=pd.read_csv('S19_Release_6_28_21.zip/Train/late.csv')
+#     problems =getProblems(df2)
+#     for i in range(len(problems)):
+#         for j in range(len(df)):
+#             if(df['ProblemID'].iloc[j]==problems[i]):
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
-   # main()
+    main()
     main2()
+    # df=pd.read_csv('S19_Release_6_28_21.zip/Train/Data/MainTable.csv')
+    # df1=pd.read_csv('S19_Release_6_28_21.zip/Train/late.csv')
+    # getSubjects(df1)
