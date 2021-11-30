@@ -19,7 +19,7 @@ def perProblemFeatures(X_train, prob_id):
     subjectFeatures = []
     for i in range(len(X_train)):
         if X_train[i, n_previously_generated_features] == prob_id:
-            subjectFeatures.append(X_train[i, :8]) # Try with different features from 5-8 (First 5 from Naive Model)
+            subjectFeatures.append(X_train[i, :]) # Try with different features from 5-8 (First 5 from Naive Model)
     return subjectFeatures
 
 

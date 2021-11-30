@@ -14,10 +14,6 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 
-semester = 'S19'
-BASE_PATH = os.path.join('Data', 'Release', semester)
-TRAIN_PATH = os.path.join(BASE_PATH, 'Train')
-TEST_PATH = os.path.join(BASE_PATH, 'Test')
 
 # The early dataset will help us to feature extraction,
 # but we're not actually predicting anything here
@@ -101,10 +97,9 @@ def extract_features(X, early_df, scaler, is_train):
 
 
 
-
 early_test = pd.read_csv('../newEarlyTestF19.csv')
 late_test = pd.read_csv( '../../F19/Test/late.csv')
-X_test = extract_features(late_test, early_test,scaler, True)
+X_test = extract_features(late_test, early_test, scaler, True)
 
 print(X_test.shape)
 print(X_test[:2, ])

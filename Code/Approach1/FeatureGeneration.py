@@ -21,7 +21,7 @@ TEST_PATH = os.path.join(BASE_PATH, 'Test')
 # but we're not actually predicting anything here
 # Note: we could still use this for model training if desired.
 # early_train = pd.read_csv(os.path.join('earlyTrain.csv'))
-early_train = pd.read_csv('../Code/newEarlyTrain.csv')
+early_train = pd.read_csv('../newEarlyTrain.csv')
 
 # print(early_train.head())
 
@@ -29,7 +29,7 @@ early_train = pd.read_csv('../Code/newEarlyTrain.csv')
 # The late dataset contains the problems that we're actually predicting for.
 # The training portion of it includes labels.
 # late_train = pd.read_csv(os.path.join('late.csv'))
-late_train = pd.read_csv('../S19.zip/data/Train/late.csv')
+late_train = pd.read_csv('../../data/S19/Train/late.csv')
 
 # late_train.head()
 
@@ -57,7 +57,7 @@ def extract_instance_features(instance, early_df):
     instance['MaxAttempts'] = np.max(early_problems['Attempts'])
     # Percentage of problems gotten correct on the first try
     instance['PercCorrectFirstTry'] = np.mean(early_problems['Attempts'] == 1)
-    df_generatedFeatures = pd.read_csv(os.path.join('../Code/newEarlyTrain.csv'))
+    df_generatedFeatures = pd.read_csv(os.path.join('../newEarlyTrain.csv'))
     df_generatedFeatures_problems = df_generatedFeatures[df_generatedFeatures[PS2.SubjectID] == subject_id]
     # print(len(df_generatedFeatures_problems))
     instance['PercSubjectSyntaxErrors'] = np.median(df_generatedFeatures_problems['pSubjectSyntaxError'])
