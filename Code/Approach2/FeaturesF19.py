@@ -16,7 +16,7 @@ scaler = StandardScaler()
 
 early_train = pd.read_csv('../newEarlyTestF19.csv')
 
-late_train = pd.read_csv('../../F19/Test/late.csv')
+late_train = pd.read_csv('../../data/F19/Test/late.csv')
 
 X_train_base = late_train.copy()
 
@@ -51,21 +51,6 @@ def extract_instance_features(instance, early_df):
     return instance
 
 
-# for i in range(len(df)):
-#     if df['ProblemID'].iloc[i] == problem_list[x]:
-#         df['pProblemSyntaxError'].iloc[i] = '{0:.3g}'.format(len(syntax_list)/len(sublist))
-#         df.to_csv('newEarlyTrain.csv')
-#
-# late_features = []
-#
-# for i in range(len(X_train_base)):
-#     late_features.append(extract_instance_features(X_train_base.iloc[i], early_train))
-
-# df = pd.DataFrame(late_features)
-# df.to_csv('NewLateTrain.csv')
-# print(extract_instance_features(X_train_base.iloc[0], early_train))
-
-
 def extract_features(X, early_df, scaler, is_train):
     # First extract performance features for each row
     features = X.apply(lambda instance: extract_instance_features(instance, early_df), axis=1)
@@ -82,13 +67,12 @@ def extract_features(X, early_df, scaler, is_train):
     return np.concatenate([features, problem_ids], axis=1)
 
 
-
 early_test = pd.read_csv('../newEarlyTestF19.csv')
-late_test = pd.read_csv( '../../F19/Test/late.csv')
+late_test = pd.read_csv( '../../data/F19/Test/late.csv')
 X_test = extract_features(late_test, early_test, scaler, True)
 
 print(X_test.shape)
 print(X_test[:2, ])
 
-with open('LateTestAllFeaturesF19.pickle', 'wb') as handle:
+with open('../Approach2/LateTestAllFeaturesF19.pickle', 'wb') as handle:
     pickle.dump(X_test, handle, protocol=pickle.HIGHEST_PROTOCOL)

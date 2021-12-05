@@ -1,13 +1,19 @@
 import pandas as pd
 import numpy as np
 import pickle
+from SubjectProblemList import getProblems, getSubjects
+from numpy import format_parser
 
+from Code.Approach2.Missing_Students import find_missing_students
 
-late_train = pd.read_csv('../../S19.zip/data/Train/late.csv')
+missing = find_missing_students(True)
 
+late_train = pd.read_csv('../../data/S19/Train/late.csv')
+last_predictions = []
 
-with open('../LateTrainAllFeatures.pickle', 'rb') as handle:
+with open('../Approach2/LateTrainAllFeatures.pickle', 'rb') as handle:
     X_Train = pickle.load(handle)
+
 
 # print(len(X_train))
 TrainLateProblemList = pd.read_csv('../LateTrainProblemList.csv')
@@ -19,28 +25,20 @@ def perProblemFeatures(X_train, prob_id):
     subjectFeatures = []
     for i in range(len(X_train)):
         if X_train[i, n_previously_generated_features] == prob_id:
-            subjectFeatures.append(X_train[i, :8]) # Try with different features from 5-8 (First 5 from Naive Model)
+            subjectFeatures.append(X_train[i, :8])  # Try with different features from 5-8 (First 5 from Naive Model)
     return subjectFeatures
 
 
 problem_X_Train = []
 sum = 0
 
-for i in range(20):
+for i in range(1):
     # print(TrainLateProblemList['ProblemID'].iloc[i])
     problem_X_Train.append(perProblemFeatures(X_Train, TrainLateProblemList['ProblemID'].iloc[i]))
     sum += len(problem_X_Train[i])
     # print(len(problem_X_Train[i]))
 
-
 y_Train = []
-
-for i in range(len(TrainLateProblemList)):
-    y_TrainPerProblem = []
-    for j in range(len(late_train)):
-        if late_train['ProblemID'].iloc[j] == TrainLateProblemList['ProblemID'].iloc[i]:
-            y_TrainPerProblem.append(late_train['Label'].iloc[j])
-    y_Train.append(y_TrainPerProblem)
 
 # print('X_Train:', len(problem_X_Train[3]))
 # print(sum)
@@ -55,38 +53,8 @@ macrof1_cv = []
 AUC_model = []
 AUC_cv = []
 
-with open('LateSkills.pickle', 'rb') as handle:
-    LateSkills = pickle.load(handle)
-
-
-index_similar_probs = []
-final_indexes = []
-for l in range(0, 20):
-    # print('Problem Index:', l, ' :', LateSkills[l])
-    for x in range(0, l):
-        count = 0
-        # print('====', LateSkills[x])
-        for i in range(len(LateSkills[l])):
-            # print(LateSkills[l][i])
-            if LateSkills[l][i] in LateSkills[x]:
-                count += 1
-            if count >= 4:
-                index_similar_probs.append(x)
-                break
-    final_indexes.append(index_similar_probs)
-    index_similar_probs = []
-
-print(len(problem_X_Train[0]))
-# previous_Labels =
 for i in range(20):
-
-    # TO DO: Add previous labels
-    # if len(final_indexes[i]) > 0:
-        # problem_X_Train[i] = pProblem
-
-
-
-    X_train, X_test, Y_train, Y_test = train_test_split(problem_X_Train[i], y_Train[i], test_size=0.2, random_state=42)
+    X_train, X_test, Y_train, Y_test = train_test_split(problem_X_Train[i], y_Train[i], test_size=0.2, shuffle=False)
     from sklearn.linear_model import LogisticRegressionCV
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.svm import SVC
@@ -100,15 +68,51 @@ for i in range(20):
 
     # svmPoly = sklearn.svm.SVC(kernel='poly', C=0.05, degree=4, coef0=1, gamma=1)
     # svmPoly.fit(X_train,Y_train)
-    #linear_clf = LinearSVC(C=1, loss='hinge', random_state=42)
-    #linear_clf.fit(X_train, Y_train)
-    #train_predictions = linear_clf.predict(X_test)
+    # linear_clf = LinearSVC(C=1, loss='hinge', random_state=42)
+    # linear_clf.fit(X_train, Y_train)
+    # train_predictions = linear_clf.predict(X_test)
     # train_predictions=svmPoly.predict(X_test)
     # clf = MLPClassifier(solver='lbfgs', alpha=1e-7, hidden_layer_sizes=(100, 50, 2), max_iter=3000, random_state=42)
     # model = BaggingClassifier(base_estimator=clf, n_estimators=500, random_state=1)
 
+    if i != 0:
+        # lastColumn='LastPredictions'+str(i+30)
+        X_train = np.asarray(X_train)
+        X_test = np.asarray(X_test)
+        # print(type(X_train))type
+        # print(type(X_train[0]))
+
+        X_train = np.append(X_train, [[np.NaN]] * len(X_train), axis=1)
+        X_train = np.append(X_train, [column[i] for column in missing], axis=1)
+        # X_test = np.append(X_test, [column[i] for column in missing], axis=1)
+        X_test = np.append(X_test, [[np.NaN]] * len(X_test), axis=1)
+
+        print(len(X_train))
+        break
+        ind_pred = 0
+        problem_list = getProblems(late_train)
+        n_previously_generated_features = 8
+        for k in range(len(X_train)):
+            for b in range(len(missing)):
+                if missing[b][i] == True:
+                    if X_train[k, n_previously_generated_features] == problem_list[i]:
+                        X_train[k, -1] = last_predictions[ind_pred]
+                        ind_pred += 1
+                else:
+                    X_train[k, -1] = np.median(last_predictions)
+
+        for k in range(len(X_test)):
+            for b in range(len(missing)):
+                if missing[b][i] == True:
+                    if X_test[k, n_previously_generated_features] == problem_list[i]:
+                        X_test[k, -1] = last_predictions[ind_pred]
+                        ind_pred += 1
+                else:
+                    X_test[k, -1] = np.median(last_predictions)
+
     model.fit(X_train, Y_train)
     train_predictions = model.predict(X_test)
+    last_predictions = train_predictions
 
     from sklearn.metrics import classification_report
     from sklearn.metrics import roc_auc_score

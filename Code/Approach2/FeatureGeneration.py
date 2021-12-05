@@ -67,21 +67,6 @@ def extract_instance_features(instance, early_df):
     return instance
 
 
-# for i in range(len(df)):
-#     if df['ProblemID'].iloc[i] == problem_list[x]:
-#         df['pProblemSyntaxError'].iloc[i] = '{0:.3g}'.format(len(syntax_list)/len(sublist))
-#         df.to_csv('newEarlyTrain.csv')
-#
-# late_features = []
-#
-# for i in range(len(X_train_base)):
-#     late_features.append(extract_instance_features(X_train_base.iloc[i], early_train))
-
-# df = pd.DataFrame(late_features)
-# df.to_csv('NewLateTrain.csv')
-# print(extract_instance_features(X_train_base.iloc[0], early_train))
-
-
 def extract_features(X, early_df, scaler, is_train):
     # First extract performance features for each row
     features = X.apply(lambda instance: extract_instance_features(instance, early_df), axis=1)

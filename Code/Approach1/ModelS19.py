@@ -112,3 +112,5 @@ print('Mean model f1 score: ', np.mean(macrof1_model))
 print("Mean cv f1 score: ", np.mean(macrof1_cv))
 print('AUC Model: ', np.mean(AUC_model))
 print('AUC CV: ', np.mean(AUC_cv))
+
+

@@ -10,7 +10,7 @@ def getSubjects(df):
     for i in range(len(df)):
         if df['SubjectID'].iloc[i] not in subjectList:
             subjectList.append(df['SubjectID'].iloc[i])
-    print(len(subjectList))
+    # print(len(subjectList))
     return subjectList
 
 
@@ -159,13 +159,6 @@ def main():
 #     for i in range(len(problems)):
 #         for j in range(len(df)):
 #             if(df['ProblemID'].iloc[j]==problems[i]):
-
-
-
-
-
-
-
 
 if __name__ == "__main__":
     main()
