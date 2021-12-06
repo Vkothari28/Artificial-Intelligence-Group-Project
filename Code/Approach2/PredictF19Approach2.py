@@ -105,7 +105,10 @@ for i in range(20):
                     X_test[k, -1] = np.median(last_predictions)
 
     from sklearn.ensemble import RandomForestClassifier
-    model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=64, n_jobs=-1)
+    from sklearn.linear_model import LogisticRegressionCV
+
+   # model = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+    model = LogisticRegressionCV()
 
     # print('X Train: ', X_train[0])
     # print('X Test: ', X_test[0])
